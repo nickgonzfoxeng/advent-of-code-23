@@ -6,6 +6,7 @@ package aoc;
 import java.util.ArrayList;
 
 import aoc.day1.DayOne;
+import aoc.day2.DayTwo;
 import aoc.utility.filereader.FileReader;
 
 public class App {
@@ -20,5 +21,6 @@ public class App {
 
     public static void runDayTwo(){
         ArrayList<String> inputs = FileReader.readInputFile("app/src/main/java/aoc/day2/input.txt");
+        System.out.println(DayTwo.main(inputs));
     }
 }
