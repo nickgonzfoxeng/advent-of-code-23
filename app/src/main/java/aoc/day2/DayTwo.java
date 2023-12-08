@@ -2,6 +2,7 @@ package aoc.day2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class DayTwo {
     // 12 red cubes, 13 green cubes, and 14 blue cubes
@@ -34,11 +35,9 @@ public class DayTwo {
             HashMap<String, Integer> roundCubeCount = DayTwo.prepareCubeRecordHashMap(round);
 
             for (String color : DayTwo.ELF_INPUT.keySet()) {
-                
-                int cubeCountFromElfInput = DayTwo.ELF_INPUT.get(color);
-                int cubeCountForColor = roundCubeCount.get(color) == null ? -1 : roundCubeCount.get(color);
-                
-                if(cubeCountForColor != -1 && cubeCountForColor > cubeCountFromElfInput){
+                int cubeCountFromElfInput = DayTwo.ELF_INPUT.get(color);   
+                Optional<Integer> colorCubeCount = Optional.ofNullable(roundCubeCount.get(color));
+                if(colorCubeCount.isPresent() && colorCubeCount.get() > cubeCountFromElfInput){
                     possible = false;
                     break;
                 }
