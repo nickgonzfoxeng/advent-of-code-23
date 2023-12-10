@@ -20,9 +20,9 @@ dependencies {
     // Use JUnit Jupiter for testing.
     implementation("org.apache.commons:commons-lang3:3.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
-
     // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("org.javatuples:javatuples:1.2")
 }
 
 application {
