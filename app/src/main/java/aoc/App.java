@@ -9,12 +9,13 @@ import aoc.day1.DayOne;
 import aoc.day2.DayTwo;
 import aoc.day3.DayThreeAttemptThree;
 import aoc.day4.DayFour;
+import aoc.day5.DayFive;
 import aoc.utility.filereader.FileReader;
 
 
 public class App {
     public static void main(String[] args) {
-        App.runDayFour();
+        App.runDayFive();
     }
 
     public static void runDayOne(){
@@ -32,9 +33,15 @@ public class App {
         System.out.println(DayThreeAttemptThree.main(inputs));
     }
 
-        public static void runDayFour(){
+    public static void runDayFour(){
         ArrayList<String> inputs = FileReader.readInputFile("app/src/main/java/aoc/day4/input.txt");
         System.out.println(DayFour.main(inputs));
+    }
+
+    public static void runDayFive(){
+        ArrayList<String> inputs = FileReader.readInputFile("app/src/main/java/aoc/day5/input.txt");
+        DayFive dayFive= new DayFive();
+        System.out.println(dayFive.main(inputs));
     }
 
 
