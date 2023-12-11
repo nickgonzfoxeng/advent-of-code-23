@@ -1,63 +1,105 @@
 package aoc.day1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class DayOne {
     
     private static String leftNumberAsString = "";
     private static String rightNumberAsString = "";
+    private static boolean isNumberFoundLeft = false; 
+    private static boolean isNumberFoundRight = false;
+
+    private static HashMap<String, Integer> numbers = new HashMap<String, Integer>() {{
+        put("one", 1);
+        put("two", 2);
+        put("three", 3);
+        put("four", 4);
+        put("five", 5);
+        put("six", 6);
+        put("seven", 7);
+        put("eight", 8);
+        put("nine", 9);
+    }};
 
     public static double main(ArrayList<String> inputs){
-        double runningTotal = 0;
+        int runningTotal = 0;
         for (String calibrationString : inputs) {
-            runningTotal += DayOne.findCalibrationValue(calibrationString);
+            DayOne.findNumbers(calibrationString);
+            runningTotal += Integer.parseInt((DayOne.leftNumberAsString + DayOne.rightNumberAsString));
             DayOne.resetTrackers();
         }
         return runningTotal;   
     }
 
-    private static double findCalibrationValue(String calibrationString){
+    private static void findNumbers(String calibrationString){
         int leftPointer = 0;
         int rightPointer = calibrationString.length() - 1;
         
         for(int i = 0; i < calibrationString.length(); i++) {
-            
-            // This seems gross, but its also some silly leetcode type question so whatever
-            if(DayOne.leftNumberAsString.length() == 0){
-                if(DayOne.isNumber(calibrationString.charAt(leftPointer))){
-                    String number = String.valueOf(calibrationString.charAt(leftPointer));
-                    DayOne.leftNumberAsString = number;
-                } else {
-                    leftPointer++;
-                }
+            if(!isNumberFoundLeft){
+                determineNumber(calibrationString, true, leftPointer);
+            }
+
+            if(!isNumberFoundRight){
+                determineNumber(calibrationString, false, rightPointer);
             }
             
-            if(DayOne.rightNumberAsString.length() == 0){
-                if(DayOne.isNumber(calibrationString.charAt(rightPointer))){
-                    String number = String.valueOf(calibrationString.charAt(rightPointer));
-                    DayOne.rightNumberAsString = number;
-                } else {
-                    rightPointer--;
-                }
+            if(DayOne.isNumberFoundLeft && DayOne.isNumberFoundRight){
+                return;
             }
-            
-            if(DayOne.leftNumberAsString.length() == 1 && DayOne.rightNumberAsString.length() == 1){
-                String combinedVal = DayOne.leftNumberAsString + DayOne.rightNumberAsString; 
-                return Integer.parseInt(combinedVal);
-            }
+            leftPointer+=1; 
+            rightPointer--;
         }
-        return 0;
     }
     
-    private static boolean isNumber(char character) {
-        String charAsString = String.valueOf(character);
-        return StringUtils.isNumeric(charAsString);
+    private static void determineNumber(String calibrationString, boolean isLeft, int currentIndex) {
+        // if its an actual number just return
+        if(StringUtils.isNumeric(String.valueOf(calibrationString.charAt(currentIndex)))){
+            if(isLeft){
+                DayOne.leftNumberAsString = String.valueOf(calibrationString.charAt(currentIndex));
+                DayOne.isNumberFoundLeft = true;      
+            } else {
+               DayOne.rightNumberAsString = String.valueOf(calibrationString.charAt(currentIndex)); 
+               DayOne.isNumberFoundRight = true;
+            }
+            return;
+        }
 
+        if(isLeft){
+            determineStrings(calibrationString.substring(currentIndex, calibrationString.length()), true);
+        } else {
+            determineStrings(calibrationString.substring(currentIndex,  calibrationString.length()), false);
+        }
+    }
+
+    private static void determineStrings(String calibrationString, boolean isLeft){
+        int numberVal = 0;
+        for(String numberKey: DayOne.numbers.keySet()){
+            if(calibrationString.startsWith(numberKey)){
+                numberVal = DayOne.numbers.get(numberKey);
+                break;
+            }
+        }
+        if(numberVal == 0){
+            return;
+        }
+
+        if(isLeft){
+            DayOne.leftNumberAsString = String.valueOf(numberVal);
+            DayOne.isNumberFoundLeft = true;
+        } else {
+            DayOne.rightNumberAsString = String.valueOf(numberVal);
+            DayOne.isNumberFoundRight = true;
+        }
     }
 
     private static void resetTrackers() {
         DayOne.leftNumberAsString = "";
         DayOne.rightNumberAsString = "";
+        DayOne.isNumberFoundLeft = false; 
+        DayOne.isNumberFoundRight = false;
     }
 }
