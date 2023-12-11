@@ -2,7 +2,6 @@ package aoc.day3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 

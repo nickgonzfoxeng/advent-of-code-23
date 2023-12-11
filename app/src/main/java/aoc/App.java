@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import aoc.day1.DayOne;
 import aoc.day2.DayTwo;
 import aoc.day3.DayThreeAttemptThree;
+import aoc.day4.DayFour;
 import aoc.utility.filereader.FileReader;
 
 
 public class App {
     public static void main(String[] args) {
-        App.runDayThree();
+        App.runDayFour();
     }
 
     public static void runDayOne(){
@@ -29,6 +30,11 @@ public class App {
     public static void runDayThree(){
         ArrayList<String> inputs = FileReader.readInputFile("app/src/main/java/aoc/day3/input.txt");
         System.out.println(DayThreeAttemptThree.main(inputs));
+    }
+
+        public static void runDayFour(){
+        ArrayList<String> inputs = FileReader.readInputFile("app/src/main/java/aoc/day4/input.txt");
+        System.out.println(DayFour.main(inputs));
     }
 
 
