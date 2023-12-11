@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import com.google.common.base.Optional;
 
 public class DayThreeAttemptThree {
     private static int runningTotal= 0;
@@ -12,9 +15,11 @@ public class DayThreeAttemptThree {
     private static String recentlyFoundNumber = "";
     private static boolean isValidEnginePartFoundForCurrentNumber = false; 
     private static ArrayList<ArrayList<String>> matrix = new ArrayList<>();
+    private static ArrayList<ImmutablePair<Integer, Integer>> coordinateDeltas = new ArrayList<ImmutablePair<Integer, Integer>>();
 
     public static int main(ArrayList<String> inputs){
         int currentRowIndex = 0;
+        initCoords();
         DayThreeAttemptThree.matrixHeight = inputs.size() - 1;
      
         for (String matrixRow: inputs) {
@@ -30,14 +35,47 @@ public class DayThreeAttemptThree {
                 DayThreeAttemptThree.matrixColumnLength = row.size() - 1;
             }
 
-            DayThreeAttemptThree.scanRow(currentRowIndex);
+            // DayThreeAttemptThree.scanRowForValidParts(currentRowIndex);
+            DayThreeAttemptThree.scanRowForGears(currentRowIndex);
             currentRowIndex++;
         }
 
         return DayThreeAttemptThree.runningTotal;
     }
 
-    private static void scanRow(int currentRowIndex){
+    private static void scanRowForGears(int currentRowIndex){
+        ArrayList<String> row = DayThreeAttemptThree.matrix.get(currentRowIndex);
+        int currentColumnIndex = 0; 
+        for(String column : row){
+
+            if(column.equals("*")){
+                double gearValue = DayThreeAttemptThree.validateGear(currentRowIndex, currentColumnIndex);
+                DayThreeAttemptThree.runningTotal += gearValue;
+            }
+            currentColumnIndex++; 
+        }
+    }
+
+    private static void initCoords(){
+        // look down
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(1, 0));
+        // look up
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(-1, 0));
+        // look right
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(0, 1));
+        // look left
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(0, -1));
+        // diaganolly down to the right
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(1, 1));
+        // diaganolly diaganolly to the left
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(1, -1));
+        // diaganolly up to the left 
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(-1, -1));
+        // diaganolly up to the right
+        coordinateDeltas.add(new ImmutablePair<Integer,Integer>(-1, 1));
+    }
+
+    private static void scanRowForValidParts(int currentRowIndex){
 
         ArrayList<String> row = DayThreeAttemptThree.matrix.get(currentRowIndex);
         int currentColumnIndex = 0; 
@@ -59,6 +97,61 @@ public class DayThreeAttemptThree {
         DayThreeAttemptThree.handleRunningTotal();
     }
 
+    private static double validateGear(int currRow, int currCol){
+        String firstGearValue = "";
+        for(ImmutablePair<Integer, Integer> coordDelta : DayThreeAttemptThree.coordinateDeltas){
+            
+            ImmutablePair<Integer, Integer> adjacentCoordinates = new ImmutablePair<Integer,Integer>(coordDelta.getLeft() + currRow, coordDelta.getRight() + currCol);
+            Optional<String> numberChar = Optional.fromNullable(DayThreeAttemptThree.matrix.get(adjacentCoordinates.getLeft()).get(adjacentCoordinates.getRight()));
+            
+            if(numberChar.isPresent() && StringUtils.isNumeric(numberChar.get())){
+                String gearValue = parseGearValue(adjacentCoordinates, numberChar.get());
+                if(firstGearValue.length() > 0 && !firstGearValue.equals(gearValue)){
+                    return (Double.parseDouble(firstGearValue) * Double.parseDouble(gearValue));
+                } else {
+                    firstGearValue = gearValue;
+                }
+            }  
+        }
+        // return 0 to the running total if it wasn't a a valid gear
+        return 0;
+    }
+
+
+    private static String parseGearValue(ImmutablePair<Integer, Integer> adjacentCoordinates, String startingNumberChar){
+            String currentNumberString = startingNumberChar;
+            // setup pointers for the found numeric character to scan left and right simultaneously
+            // right number in pair represents the current found adjacent numbers column
+            int leftPointer = adjacentCoordinates.getRight() - 1;
+            int rightPointer = adjacentCoordinates.getRight() + 1;
+            ArrayList<String> charRow = DayThreeAttemptThree.matrix.get(adjacentCoordinates.getLeft());
+            boolean isFullNumberFound = false;
+
+            while(!isFullNumberFound) {
+
+                if(leftPointer >= 0 && StringUtils.isNumeric(charRow.get(leftPointer))){
+                    currentNumberString = charRow.get(leftPointer) + currentNumberString;
+                    leftPointer-=1;
+                }
+
+                if(rightPointer <= DayThreeAttemptThree.matrixColumnLength && StringUtils.isNumeric(charRow.get(rightPointer))){
+                        currentNumberString =  currentNumberString + charRow.get(rightPointer);
+                        rightPointer+=1;
+                }
+                
+                // if the first char in row was a number and pointer is now -1 signfiying EOL OR the char is not a number 
+                boolean leftTermination = leftPointer < 0 || !StringUtils.isNumeric(charRow.get(leftPointer));
+                // if the last char was a number and pointer is now == rowlength signfiying EOL OR the char is not a number 
+                boolean rightTermination = rightPointer > DayThreeAttemptThree.matrixColumnLength || !StringUtils.isNumeric(charRow.get(rightPointer));
+                
+                if(leftTermination && rightTermination){
+                    isFullNumberFound = true;
+                }
+            }
+            return currentNumberString;
+        }
+
+    // handle running total for part search
     private static void handleRunningTotal() {
                 if(isValidEnginePartFoundForCurrentNumber){
                     DayThreeAttemptThree.runningTotal += Integer.parseInt(recentlyFoundNumber);
@@ -140,7 +233,6 @@ public class DayThreeAttemptThree {
             return true;
             }
         }
-
         return false;
     }
 }
