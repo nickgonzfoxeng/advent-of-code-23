@@ -13,7 +13,7 @@ import aoc.utility.filereader.FileReader;
 
 public class App {
     public static void main(String[] args) {
-        App.runDayOne();
+        App.runDayTwo();
     }
 
     public static void runDayOne(){
