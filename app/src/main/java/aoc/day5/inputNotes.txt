@@ -1,0 +1,78 @@
+seeds: 79 seed upperBound = 93 range: 14
+
+seed-to-soil map:
+50 98 2
+52 50 48
+
+
+// first get value upper bound 
+79 93 14
+// validate both upper and lower are within given range
+lowerbound >= 50
+upperBound <= 98
+// return same value if not
+// set the new lower bound value for destination
+sourceLowerBound + delta(79-50)
+   
+Remainging range:
+81 95 14
+
+remaining range: 
+81 95 14
+
+water-to-light map:
+ligtVal=18 waterVal=25 range=70
+
+// first get value upper bound 
+// 81   95   14
+// validate both upper and lower are within given range
+lowerbound >= 25 // increase if not matched
+upperBound <= 95 // reduce if not matched
+// return same value if increase/reduction don't produce new value 
+// set the new lower bound value for destination
+sourceLowerBound + delta(81-25)
+
+remaining range: 
+74   88  14
+
+light-to-temperature map:
+45 77 23
+// 77 (increased)  88    11
+// 77 >= 77
+// 88 <= 100
+// if lowerbound == destination value dont do anything
+
+remaining range:
+
+77  88   11
+
+temperature-to-humidity map:
+0 69 1
+1 0 69
+
+remaining range:
+
+77  88   11
+
+humidity-to-location map:
+60 56 37
+56 93 4 
+
+// 77 88  11
+// 77 >= 56
+// 88 <= 93 
+
+
+light-to-temperature map 2:
+68 64 13
+// 74  77 reduced    3
+// 74 >= 64
+// 88 <= 77
+// if lowerbound == destination value dont do anything
+// else get the next destination
+// sourceLowerBound + delta(74-68)
+
+
+74 77 3 
+
+

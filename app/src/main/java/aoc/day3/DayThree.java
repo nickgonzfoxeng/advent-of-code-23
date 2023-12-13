@@ -7,7 +7,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import com.google.common.base.Optional;
 
-public class DayThreeAttemptThree {
+public class DayThree {
     private static int runningTotal= 0;
     private static int matrixColumnLength = 0;
     private static int matrixHeight = 0;
@@ -19,37 +19,37 @@ public class DayThreeAttemptThree {
     public static int main(ArrayList<String> inputs){
         int currentRowIndex = 0;
         initCoords();
-        DayThreeAttemptThree.matrixHeight = inputs.size() - 1;
+        DayThree.matrixHeight = inputs.size() - 1;
      
         for (String matrixRow: inputs) {
             // convert to array to treat as matrix row
             ArrayList<String> row = new ArrayList<String>(Arrays.asList(matrixRow.trim().split(""))); 
-               DayThreeAttemptThree.matrix.add(row);
+               DayThree.matrix.add(row);
         }
         
-        for (ArrayList<String> row: DayThreeAttemptThree.matrix) {
+        for (ArrayList<String> row: DayThree.matrix) {
 
             // initial row set
-            if(DayThreeAttemptThree.matrixColumnLength == 0){
-                DayThreeAttemptThree.matrixColumnLength = row.size() - 1;
+            if(DayThree.matrixColumnLength == 0){
+                DayThree.matrixColumnLength = row.size() - 1;
             }
 
             // DayThreeAttemptThree.scanRowForValidParts(currentRowIndex);
-            DayThreeAttemptThree.scanRowForGears(currentRowIndex);
+            DayThree.scanRowForGears(currentRowIndex);
             currentRowIndex++;
         }
 
-        return DayThreeAttemptThree.runningTotal;
+        return DayThree.runningTotal;
     }
 
     private static void scanRowForGears(int currentRowIndex){
-        ArrayList<String> row = DayThreeAttemptThree.matrix.get(currentRowIndex);
+        ArrayList<String> row = DayThree.matrix.get(currentRowIndex);
         int currentColumnIndex = 0; 
         for(String column : row){
 
             if(column.equals("*")){
-                double gearValue = DayThreeAttemptThree.validateGear(currentRowIndex, currentColumnIndex);
-                DayThreeAttemptThree.runningTotal += gearValue;
+                double gearValue = DayThree.validateGear(currentRowIndex, currentColumnIndex);
+                DayThree.runningTotal += gearValue;
             }
             currentColumnIndex++; 
         }
@@ -76,32 +76,32 @@ public class DayThreeAttemptThree {
 
     private static void scanRowForValidParts(int currentRowIndex){
 
-        ArrayList<String> row = DayThreeAttemptThree.matrix.get(currentRowIndex);
+        ArrayList<String> row = DayThree.matrix.get(currentRowIndex);
         int currentColumnIndex = 0; 
         for(String column : row){
             // if it's a number, determine if it's located next to a symbold
             if(StringUtils.isNumeric(column)){
                 if(!isValidEnginePartFoundForCurrentNumber){
-                    DayThreeAttemptThree.isValidEnginePartFoundForCurrentNumber = validateStandardCoords(currentRowIndex, currentColumnIndex);
+                    DayThree.isValidEnginePartFoundForCurrentNumber = validateStandardCoords(currentRowIndex, currentColumnIndex);
                 }
-                DayThreeAttemptThree.recentlyFoundNumber = recentlyFoundNumber + column;
+                DayThree.recentlyFoundNumber = recentlyFoundNumber + column;
             } else {
                 // if it's not a number, check if the previous number had a symbol next to it, and add it to the total if it did.
-                DayThreeAttemptThree.handleRunningTotal();
+                DayThree.handleRunningTotal();
             }
             // regardles if its a number symbol or ., increase the column index to keep moving along the matrix.
             currentColumnIndex++; 
         }
         // hande found number at the end of the row
-        DayThreeAttemptThree.handleRunningTotal();
+        DayThree.handleRunningTotal();
     }
 
     private static double validateGear(int currRow, int currCol){
         String firstGearValue = "";
-        for(ImmutablePair<Integer, Integer> coordDelta : DayThreeAttemptThree.coordinateDeltas){
+        for(ImmutablePair<Integer, Integer> coordDelta : DayThree.coordinateDeltas){
             
             ImmutablePair<Integer, Integer> adjacentCoordinates = new ImmutablePair<Integer,Integer>(coordDelta.getLeft() + currRow, coordDelta.getRight() + currCol);
-            Optional<String> numberChar = Optional.fromNullable(DayThreeAttemptThree.matrix.get(adjacentCoordinates.getLeft()).get(adjacentCoordinates.getRight()));
+            Optional<String> numberChar = Optional.fromNullable(DayThree.matrix.get(adjacentCoordinates.getLeft()).get(adjacentCoordinates.getRight()));
             
             if(numberChar.isPresent() && StringUtils.isNumeric(numberChar.get())){
                 String gearValue = parseGearValue(adjacentCoordinates, numberChar.get());
@@ -123,7 +123,7 @@ public class DayThreeAttemptThree {
             // right number in pair represents the current found adjacent numbers column
             int leftPointer = adjacentCoordinates.getRight() - 1;
             int rightPointer = adjacentCoordinates.getRight() + 1;
-            ArrayList<String> charRow = DayThreeAttemptThree.matrix.get(adjacentCoordinates.getLeft());
+            ArrayList<String> charRow = DayThree.matrix.get(adjacentCoordinates.getLeft());
             boolean isFullNumberFound = false;
 
             while(!isFullNumberFound) {
@@ -133,7 +133,7 @@ public class DayThreeAttemptThree {
                     leftPointer-=1;
                 }
 
-                if(rightPointer <= DayThreeAttemptThree.matrixColumnLength && StringUtils.isNumeric(charRow.get(rightPointer))){
+                if(rightPointer <= DayThree.matrixColumnLength && StringUtils.isNumeric(charRow.get(rightPointer))){
                         currentNumberString =  currentNumberString + charRow.get(rightPointer);
                         rightPointer+=1;
                 }
@@ -141,7 +141,7 @@ public class DayThreeAttemptThree {
                 // if the first char in row was a number and pointer is now -1 signfiying EOL OR the char is not a number 
                 boolean leftTermination = leftPointer < 0 || !StringUtils.isNumeric(charRow.get(leftPointer));
                 // if the last char was a number and pointer is now == rowlength signfiying EOL OR the char is not a number 
-                boolean rightTermination = rightPointer > DayThreeAttemptThree.matrixColumnLength || !StringUtils.isNumeric(charRow.get(rightPointer));
+                boolean rightTermination = rightPointer > DayThree.matrixColumnLength || !StringUtils.isNumeric(charRow.get(rightPointer));
                 
                 if(leftTermination && rightTermination){
                     isFullNumberFound = true;
@@ -153,26 +153,26 @@ public class DayThreeAttemptThree {
     // handle running total for part search
     private static void handleRunningTotal() {
                 if(isValidEnginePartFoundForCurrentNumber){
-                    DayThreeAttemptThree.runningTotal += Integer.parseInt(recentlyFoundNumber);
+                    DayThree.runningTotal += Integer.parseInt(recentlyFoundNumber);
                 }
                 // Always reset the search result values to default
-                DayThreeAttemptThree.recentlyFoundNumber = "";
-                DayThreeAttemptThree.isValidEnginePartFoundForCurrentNumber = false;
+                DayThree.recentlyFoundNumber = "";
+                DayThree.isValidEnginePartFoundForCurrentNumber = false;
     }
 
     // generate coordinates for up right left and below
     private static boolean validateStandardCoords(int row, int column){
             if(column > 0){
-                if(!DayThreeAttemptThree.matrix.get(row).get(column - 1).equals(".") 
-                    && !StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row).get(column - 1))){
+                if(!DayThree.matrix.get(row).get(column - 1).equals(".") 
+                    && !StringUtils.isNumeric(DayThree.matrix.get(row).get(column - 1))){
                     // symbol found directly left
                     return true;
             }
         }
 
-            if(column < DayThreeAttemptThree.matrixColumnLength){
-                if(!StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row).get(column + 1)) 
-            && !DayThreeAttemptThree.matrix.get(row).get(column + 1).equals(".")) {
+            if(column < DayThree.matrixColumnLength){
+                if(!StringUtils.isNumeric(DayThree.matrix.get(row).get(column + 1)) 
+            && !DayThree.matrix.get(row).get(column + 1).equals(".")) {
                 // symbol found directly right
                 return true;
             }
@@ -181,15 +181,15 @@ public class DayThreeAttemptThree {
             }
 
             if(row > 0){
-                if(!StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row - 1).get(column)) 
-                && !DayThreeAttemptThree.matrix.get(row - 1).get(column).equals(".")) {
+                if(!StringUtils.isNumeric(DayThree.matrix.get(row - 1).get(column)) 
+                && !DayThree.matrix.get(row - 1).get(column).equals(".")) {
                 // symbol found directly above
                 return true;
             }}
 
-            if(row < DayThreeAttemptThree.matrixHeight){
-                if(!StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row + 1).get(column)) 
-                    && !DayThreeAttemptThree.matrix.get(row + 1).get(column).equals(".")) {
+            if(row < DayThree.matrixHeight){
+                if(!StringUtils.isNumeric(DayThree.matrix.get(row + 1).get(column)) 
+                    && !DayThree.matrix.get(row + 1).get(column).equals(".")) {
                     // symbol found below
                     return true;
                 }
@@ -201,33 +201,33 @@ public class DayThreeAttemptThree {
 
     private static boolean validateDiagonals(int row, int column){
 
-        if(column > 0 && row < DayThreeAttemptThree.matrixHeight){
-            if(!StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row + 1).get(column - 1)) 
-                 && !DayThreeAttemptThree.matrix.get(row + 1).get(column - 1).equals(".")){
+        if(column > 0 && row < DayThree.matrixHeight){
+            if(!StringUtils.isNumeric(DayThree.matrix.get(row + 1).get(column - 1)) 
+                 && !DayThree.matrix.get(row + 1).get(column - 1).equals(".")){
                 //symbol found diagonal left below
                  return true;
             }
         }
 
-        if(column < DayThreeAttemptThree.matrixColumnLength && row < DayThreeAttemptThree.matrixHeight){
-            if(!StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row + 1).get(column + 1)) 
-                && !DayThreeAttemptThree.matrix.get(row + 1).get(column + 1).equals(".")) {
+        if(column < DayThree.matrixColumnLength && row < DayThree.matrixHeight){
+            if(!StringUtils.isNumeric(DayThree.matrix.get(row + 1).get(column + 1)) 
+                && !DayThree.matrix.get(row + 1).get(column + 1).equals(".")) {
                 // symbol found diagonal right below
                 return true;
         }}
       
         if(row > 0 && column > 0){
             if(
-                !StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row - 1).get(column - 1)) 
-                && !DayThreeAttemptThree.matrix.get(row - 1).get(column - 1).equals(".")
+                !StringUtils.isNumeric(DayThree.matrix.get(row - 1).get(column - 1)) 
+                && !DayThree.matrix.get(row - 1).get(column - 1).equals(".")
             ) {
                 // symbol found diagonal left above
                 return true;
         }}
 
-        if(row > 0 && column < DayThreeAttemptThree.matrixColumnLength){
-            if( !StringUtils.isNumeric(DayThreeAttemptThree.matrix.get(row - 1).get(column + 1)) 
-           && !DayThreeAttemptThree.matrix.get(row - 1).get(column + 1).equals(".")) {
+        if(row > 0 && column < DayThree.matrixColumnLength){
+            if( !StringUtils.isNumeric(DayThree.matrix.get(row - 1).get(column + 1)) 
+           && !DayThree.matrix.get(row - 1).get(column + 1).equals(".")) {
             // symbol found diagonal right above
             return true;
             }

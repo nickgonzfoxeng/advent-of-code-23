@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import aoc.day1.DayOne;
 import aoc.day2.DayTwo;
-import aoc.day3.DayThreeAttemptThree;
+import aoc.day3.DayThree;
 import aoc.day4.DayFour;
 import aoc.day5.DayFive;
 import aoc.utility.filereader.FileReader;
@@ -30,7 +30,7 @@ public class App {
 
     public static void runDayThree(){
         ArrayList<String> inputs = FileReader.readInputFile("app/src/main/java/aoc/day3/input.txt");
-        System.out.println(DayThreeAttemptThree.main(inputs));
+        System.out.println(DayThree.main(inputs));
     }
 
     public static void runDayFour(){
@@ -40,9 +40,7 @@ public class App {
 
     public static void runDayFive(){
         ArrayList<String> inputs = FileReader.readInputFile("app/src/main/java/aoc/day5/input.txt");
-        DayFive dayFive= new DayFive();
-        System.out.println(dayFive.main(inputs));
+        System.out.println(DayFive.main(inputs));
     }
-
 
 }
